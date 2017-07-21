@@ -1,7 +1,7 @@
 # TAutoArchiver
 use to KeyedArchiver, auto NSCoding
 
-/**/
+/*.h*/
 typedef NS_ENUM(NSInteger, StudentScoreStage)
 {
 StudentScoreStageStart = 0,
@@ -54,7 +54,7 @@ StudentScoreStageEnd,
 
 @end
 
-/**/
+/*.m*/
 @implementation ATest
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder
@@ -116,7 +116,6 @@ return self;
 
 @end
 
-/**/
 /*TAutoCoder TKeyedArchiver*/
 ATest *aTest = [[ATest alloc] init];
 aTest.uid = @"TAutoArchiver1";
