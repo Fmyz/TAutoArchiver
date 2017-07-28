@@ -27,15 +27,15 @@
     for (int i=0; i<count; i++) {
         Ivar iv = ivar[i];
         const char *name = ivar_getName(iv);
-        NSString *propertyName = [NSString stringWithUTF8String:name];
-        
-        NSString *compareName = [self replaceFirstUnderline:propertyName];
-        if (allows.count && ![allows containsObject:compareName]) continue;
-        if ([ignores containsObject:compareName]) continue;
+        NSString *ivarName = [NSString stringWithUTF8String:name];
+        NSString *propertyName = [self replaceFirstUnderline:ivarName];
+
+        if (allows.count && ![allows containsObject:propertyName]) continue;
+        if ([ignores containsObject:propertyName]) continue;
         
         //利用KVC取值
-        id value = [model valueForKey:propertyName];
-        [encoder encodeObject:value forKey:propertyName];
+        id value = [model valueForKey:ivarName];
+        [encoder encodeObject:value forKey:ivarName];
     }
     free(ivar);
 }
@@ -56,17 +56,17 @@
     for (int i = 0; i<count; i++) {
         Ivar iva = ivar[i];
         const char *name = ivar_getName(iva);
-        NSString *propertyName = [NSString stringWithUTF8String:name];
+        NSString *ivarName = [NSString stringWithUTF8String:name];
+        NSString *propertyName = [self replaceFirstUnderline:ivarName];
         
-        NSString *compareName = [self replaceFirstUnderline:propertyName];
-        if (allows.count && ![allows containsObject:compareName]) continue;
-        if ([ignores containsObject:compareName]) continue;
+        if (allows.count && ![allows containsObject:propertyName]) continue;
+        if ([ignores containsObject:propertyName]) continue;
         
         //进行解档取值
-        id value = [decoder decodeObjectForKey:propertyName];
+        id value = [decoder decodeObjectForKey:ivarName];
         //利用KVC对属性赋值
         if (value) {
-            [model setValue:value forKey:propertyName];
+            [model setValue:value forKey:ivarName];
         }
     }
     free(ivar);
@@ -90,18 +90,21 @@
     return ignores;
 }
 
-- (NSString *)replaceFirstUnderline:(NSString *)propertyName
+- (NSString *)replaceFirstUnderline:(NSString *)ivarName
 {
     // 若此变量未在类结构体中声明而只声明为Property，则变量名加前缀 '_'下划线
     // 比如 @property(retain) NSString *abc;则 key == _abc;
     
-    NSString *firstStr = [propertyName substringToIndex:1];
+    NSString *propertyName = ivarName;
     
+    NSString *firstStr = [ivarName substringToIndex:1];
     if ([firstStr isEqualToString:@"_"]) {
-        propertyName = [propertyName stringByReplacingCharactersInRange:NSMakeRange(0, 1) withString:@""];
+        propertyName = [ivarName stringByReplacingCharactersInRange:NSMakeRange(0, 1) withString:@""];
     }
+    
     return propertyName;
 }
+
 
 @end
 

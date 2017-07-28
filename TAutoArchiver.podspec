@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "TAutoArchiver"
-  s.version      = "1.0.1"
+  s.version      = "1.0.2"
 
   s.summary      = "归档KeyedArchiver, 以及auto NSCoding"
   
