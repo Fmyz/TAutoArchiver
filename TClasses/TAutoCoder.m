@@ -29,7 +29,7 @@
         const char *name = ivar_getName(iv);
         NSString *propertyName = [NSString stringWithUTF8String:name];
         
-        NSString *compareName = [propertyName stringByReplacingOccurrencesOfString:@"_" withString:@""];
+        NSString *compareName = [self replaceFirstUnderline:propertyName];
         if (allows.count && ![allows containsObject:compareName]) continue;
         if ([ignores containsObject:compareName]) continue;
         
@@ -58,7 +58,7 @@
         const char *name = ivar_getName(iva);
         NSString *propertyName = [NSString stringWithUTF8String:name];
         
-        NSString *compareName = [propertyName stringByReplacingOccurrencesOfString:@"_" withString:@""];
+        NSString *compareName = [self replaceFirstUnderline:propertyName];
         if (allows.count && ![allows containsObject:compareName]) continue;
         if ([ignores containsObject:compareName]) continue;
         
@@ -88,6 +88,19 @@
         ignores = [self performSelector:@selector(ignoredCodingPropertyNames)];
     }
     return ignores;
+}
+
+- (NSString *)replaceFirstUnderline:(NSString *)propertyName
+{
+    // 若此变量未在类结构体中声明而只声明为Property，则变量名加前缀 '_'下划线
+    // 比如 @property(retain) NSString *abc;则 key == _abc;
+    
+    NSString *firstStr = [propertyName substringToIndex:1];
+    
+    if ([firstStr isEqualToString:@"_"]) {
+        propertyName = [propertyName stringByReplacingCharactersInRange:NSMakeRange(0, 1) withString:@""];
+    }
+    return propertyName;
 }
 
 @end
