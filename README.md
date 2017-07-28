@@ -1,6 +1,8 @@
 # TAutoArchiver
 use to KeyedArchiver, auto NSCoding
 
+pod 'TAutoArchiver'
+
 /*.h*/
 typedef NS_ENUM(NSInteger, StudentScoreStage)
 {
